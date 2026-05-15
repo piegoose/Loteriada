@@ -38,6 +38,9 @@ public class NumberReceiverFacade {
     public List<TicketDto> userNumbers(LocalDateTime date){
         List<Ticket> allTicketsByDrawDate = repository.findAllTicketsByDrawDate(date);
         return allTicketsByDrawDate
+                .stream()
+                .map(TicketMapper::mapFromTicket)
+                .toList();
     }
 
 }

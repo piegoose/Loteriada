@@ -61,7 +61,7 @@ class NumberReceiverFacadeTest {
         assertThat(ticketDtos).contains(
                 TicketDto.builder()
                         .ticketId(result.ticketId())
-                        .drawTime(result.drawDate())
+                        .drawDate(result.drawDate())
                         .numbersFromUser(result.numbersFromUser())
                         .build()
         );
