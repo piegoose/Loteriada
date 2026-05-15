@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import pl.lotto.domain.numberreceiver.dto.InputNumbersResultDto;
 
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -15,18 +16,20 @@ import static pl.lotto.domain.numberreceiver.dto.InputNumbersResultDto.*;
 @AllArgsConstructor
 public class NumberReceiverFacade {
 
-    private NumberValidator validator;
-    private NumberReceiverRepository repository;
+    private final NumberValidator validator;
+    private final NumberReceiverRepository repository;
+    private final Clock clock;
 
     public InputNumbersResultDto inputNumbers(Set<Integer> numbersFromUser) {
         boolean areAllNumbersInRange = validator.areAllNumbersInRange(numbersFromUser);
         if (areAllNumbersInRange) {
             String ticketId = UUID.randomUUID().toString();
-            LocalDateTime drawDate = LocalDateTime.now();
+            LocalDateTime drawDate = LocalDateTime.now(clock);
             Ticket save = repository.save(new Ticket(ticketId, drawDate, numbersFromUser));
             return builder()
                     .drawDate(save.drawDate())
                     .ticketId(save.ticketId())
+                    .numbersFromUser(numbersFromUser)
                     .message("success")
                     .build();
         }

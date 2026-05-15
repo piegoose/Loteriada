@@ -1,9 +1,14 @@
 package pl.lotto.domain.numberreceiver;
 
 import org.junit.jupiter.api.Test;
+import pl.lotto.domain.AdjustableClock;
 import pl.lotto.domain.numberreceiver.dto.InputNumbersResultDto;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Set;
 
@@ -11,9 +16,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class NumberReceiverFacadeTest {
 
+    AdjustableClock clock = new AdjustableClock(LocalDateTime.of(2024, 1, 1, 12, 0, 0).toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
+
     NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(
             new NumberValidator(),
-            new InMemoryNumberReceiverRepositoryTestImpl()
+            new InMemoryNumberReceiverRepositoryTestImpl(),
+            clock
     );
 
 
@@ -54,7 +62,7 @@ class NumberReceiverFacadeTest {
         //given
         Set<Integer> numbersFromUser = Set.of(1, 2, 3, 4, 5, 6);
         InputNumbersResultDto result = numberReceiverFacade.inputNumbers(numbersFromUser);
-        LocalDateTime drawDate = LocalDateTime.now();
+        LocalDateTime drawDate = LocalDateTime.of(2024, 1, 1, 13, 0, 0);
         //when
         List<TicketDto> ticketDtos = numberReceiverFacade.userNumbers(drawDate);
         //then
@@ -67,6 +75,4 @@ class NumberReceiverFacadeTest {
         );
 
     }
-
-
 }
